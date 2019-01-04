@@ -19,7 +19,8 @@ const items = [
 const vm = new Vue({
   el: '#app',
   data: {
-    items: items
+    items: items,
+    loggedInButton: 'ログイン済のため購入できます',
   },
   filters: {
     numberWithDelimiter: function (value) {
@@ -27,6 +28,14 @@ const vm = new Vue({
         return '0'
       }
       return value.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+    }
+  },
+  methods: {
+    doBuy: function () {
+      alert(this.totalPriceWithTax + '円のお買い上げ！')
+      this.items.forEach(function (item) {
+        item.quantity = 0
+      })
     }
   },
   computed: {
@@ -57,24 +66,3 @@ vm.$watch(function () {
 });
 
 window.vm = vm;
-
-const logged_in_button = new Vue({
-  el: '#b-button',
-  data:{
-    loggedInButton: 'ログイン済のため購入できます',
-    items: items
-  },
-  computed: {
-    totalPrice: function () {
-      return this.items.reduce(function (sum, item) {
-        return sum + (item.price * item.quantity)
-      }, 0)
-    },
-    canBuy: function () {
-      // 1000円以上から購入可能にする
-      return this.totalPrice >= 1000
-    }
-  }
-})
-
-// window.vue = vue;
